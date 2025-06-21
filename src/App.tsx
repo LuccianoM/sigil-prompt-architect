@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+// El import de "Announcer" ha sido eliminado porque no era la solución correcta.
 import { DndContext, DragEndEvent } from '@dnd-kit/core';
 import { Wand2, Plus, X as CloseIcon } from 'lucide-react';
 import { SigilBlock } from './SigilBlock';
@@ -22,8 +23,7 @@ function App() {
   const [editingSigilId, setEditingSigilId] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [showResultModal, setShowResultModal] = useState(false);
-  const [resultText, setResultText] = useState("");
-  
+  const [resultText, setResultText] = useState(""); 
   const [showAboutModal, setShowAboutModal] = useState(false);
 
   const handleDragEnd = (event: DragEndEvent) => {
@@ -85,10 +85,8 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-950 flex flex-col items-center p-8 font-sans text-white">
-      {/* --- ENCABEZADO CON ESPACIO AJUSTADO --- */}
-      <header className="w-full max-w-5xl flex items-center justify-center mb-8 px-4 space-x-4">
-        {/* Columna Izquierda */}
+    <div className="relative min-h-screen bg-gray-950 flex flex-col items-center p-8 font-sans text-white">
+      <header className="w-full max-w-5xl flex items-center justify-center mb-8 px-4 space-x-4"> 
         <div className="text-right">
           <p className="text-xl font-bold text-purple-400 uppercase tracking-wider drop-shadow-[0_0_10px_rgba(168,85,247,0.4)]">
             THIS IS
@@ -96,14 +94,10 @@ function App() {
           <p className="text-5xl font-extrabold text-purple-400 uppercase tracking-wider drop-shadow-[0_0_15px_rgba(168,85,247,0.6)]">
             SIGIL
           </p>
-        </div>
-        
-        {/* Columna Central (Logo) */}
+        </div> 
         <div className="flex-shrink-0">
-            <img src="/sigil.png" alt="Sigil Logo" className="w-24 h-24" />
-        </div>
-
-        {/* Columna Derecha */}
+          <img src="/sigil.png" alt="Sigil Logo" className="w-24 h-24" />
+        </div> 
         <div className="text-left">
           <p className="text-lg text-gray-300 font-semibold">
             Build better prompts,
@@ -115,7 +109,15 @@ function App() {
       </header>
 
       <div className="w-full max-w-4xl h-[600px] bg-gray-900/30 border-2 border-gray-700 rounded-lg relative overflow-hidden">
-        <DndContext onDragEnd={handleDragEnd}>
+        {/* --- SOLUCIÓN DEFINITIVA: Anuncios vacíos para silenciar el texto visual --- */}
+        <DndContext 
+          onDragEnd={handleDragEnd} 
+          announcements={{
+              onDragStart: () => {},
+              onDragEnd: () => {},
+              onDragCancel: () => {},
+          }}
+        >
           {sigils.map(sigil => (
             <div key={sigil.id} className="absolute" style={{ left: `${sigil.position.x}px`, top: `${sigil.position.y}px` }}>
               <SigilBlock 
@@ -147,6 +149,18 @@ function App() {
         </a>
       </div>
 
+      {/* --- AJUSTE: La insignia ahora es un enlace de texto simple --- */}
+      <div className="absolute bottom-5 left-5">
+        <a 
+          href="https://bolt.new" 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          className="text-xs text-gray-500 hover:text-gray-400 transition-colors"
+        >
+          Built with Bolt
+        </a>
+      </div>
+
       {showResultModal && (
         <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50">
           <div className="bg-gray-900 border border-purple-500 rounded-lg shadow-2xl max-w-2xl w-full p-8 relative">
@@ -158,8 +172,7 @@ function App() {
           </div>
         </div>
       )}
-
-      {/* --- NUEVO MODAL "WHAT IS SIGIL?" --- */}
+ 
       {showAboutModal && (
         <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50">
           <div className="bg-gray-900 border border-cyan-500 rounded-lg shadow-2xl max-w-2xl w-full p-8 relative">
